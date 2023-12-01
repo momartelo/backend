@@ -1,10 +1,10 @@
-import { User } from "../models/User.js";
+import { UserModel } from "../models/User.js";
 import * as bcrypt from "bcrypt";
 import { createJWT } from "../utils/jwt.js";
 
 export const ctrlCreateUser = async (req, res) => {
     try {
-        const user = new User(req.body);
+        const user = new UserModel(req.body);
         await user.save();
         res.status(201).json(user);
     } catch (error) {
@@ -18,7 +18,7 @@ export const ctrlLoginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await User.findOne({ email });
+        const user = await UserModel.findOne({ email });
         if (!user)
             return res
                 .status(404)

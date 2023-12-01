@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import * as bcrypt from "bcrypt";
 
 const UserSchema = new Schema(
@@ -23,7 +23,7 @@ const UserSchema = new Schema(
         },
         posts: [
             {
-                type: Schema.Types.ObjectId,
+                type: Types.ObjectId,
                 ref: "Post",
             },
         ],
@@ -43,4 +43,4 @@ UserSchema.pre("save", async function (next) {
     next();
 });
 
-export const User = model("User", UserSchema);
+export const UserModel = model("User", UserSchema);
