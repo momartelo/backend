@@ -1,5 +1,5 @@
-import { PostModel } from "../models/Post.js";
-import { CommentModel } from "../models/Comment.js";
+import { Post } from "../models/Post.js";
+import { Comment } from "../models/Comment.js";
 
 // Falta editar todo para abajo Musics === Comments y Playlists === Posts
 
@@ -9,7 +9,7 @@ export const ctrlCreatePost = async (req, res) => {
     try {
         const { title, description } = req.body;
 
-        const post = new PostModel({
+        const post = new Post({
             title,
             description,
             author: userId,
@@ -27,7 +27,7 @@ export const ctrlListPost = async (req, res) => {
     const userId = req.user._id;
 
     try {
-        const posts = await PostModel.find({ author: userId })
+        const posts = await Post.find({ author: userId })
             .populate("author", ["username", "avatar"])
             .populate("comments", ["comment", "date"]);
 
@@ -42,7 +42,7 @@ export const ctrlGetPost = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const post = await PostModel.findOne({
+        const post = await Post.findOne({
             _id: postId,
             author: userId,
         })
@@ -66,7 +66,7 @@ export const ctrlUpdatePost = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const post = await PostModel.findOne({
+        const post = await Post.findOne({
             _id: postId,
             author: userId,
         });
@@ -92,7 +92,7 @@ export const ctrlDeletePost = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const post = await PostModel.findOne({
+        const post = await Post.findOne({
             _id: postId,
             author: userId,
         });
@@ -103,11 +103,11 @@ export const ctrlDeletePost = async (req, res) => {
                 .json({ error: "Post no encontrado" });
         }
 
-        await CommentModel.deleteMany({
+        await Comment.deleteMany({
             _id: { $in: post.comments },
         });
 
-        await PostModel.findOneAndDelete({
+        await Post.findOneAndDelete({
             _id: postId,
             author: userId,
         });
@@ -120,7 +120,7 @@ export const ctrlDeletePost = async (req, res) => {
 
 export const isAuthor = async ({ postId, userId }) => {
     try {
-        const post = await PostModel.findOne({
+        const post = await Post.findOne({
             _id: postId,
             author: userId,
         });
