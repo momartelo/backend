@@ -1,22 +1,23 @@
 import { Router } from "express";
 
 import {
-  ctrlCreatePost,
-  ctrlDeletePost,
-  ctrlGetPost,
-  ctrlListPost,
-  ctrlUpdatePost,
+    ctrlCreatePost,
+    ctrlDeletePost,
+    ctrlGetPost,
+    ctrlListPost,
+    ctrlUpdatePost,
 } from "../controllers/post.controller.js";
 
 import {
-  createPostValidations,
-  deletePostValidations,
-  getPostValidations,
-  listPostValidations,
-  updatePostValidations,
+    createPostValidations,
+    deletePostValidations,
+    getPostValidations,
+    listPostValidations,
+    updatePostValidations,
 } from "../models/validations/post-validations.js";
 
 const postRouter = Router();
+const { postId } = req.params;
 
 postRouter.post("/", createPostValidations, ctrlCreatePost);
 postRouter.get("/", listPostValidations, ctrlListPost);
