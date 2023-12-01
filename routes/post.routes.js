@@ -17,7 +17,6 @@ import {
 } from "../models/validations/post-validations.js";
 
 const postRouter = Router();
-const { postId } = req.params;
 
 postRouter.post("/", createPostValidations, ctrlCreatePost);
 postRouter.get("/", listPostValidations, ctrlListPost);
