@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 import { applyValidations } from "../../middlewares/apply-validations.js";
-import { User } from "../User.js";
+import { UserModel } from "../User.js";
 
 export const createUserValidations = [
     body("avatar")
@@ -17,7 +17,7 @@ export const createUserValidations = [
         .withMessage("El campo { email } debe ser un email válido.")
         // validación personalizada para verificar que el email no esté en uso.
         .custom(async (value) => {
-            const user = await User.findOne({ email: value });
+            const user = await UserModel.findOne({ email: value });
 
             if (user) throw new Error("Email ya esta en uso");
 
@@ -29,7 +29,7 @@ export const createUserValidations = [
         .isString()
         .withMessage("El campo { username } debe ser un string.")
         .custom(async (value) => {
-            const user = await User.findOne({ username: value });
+            const user = await UserModel.findOne({ username: value });
 
             if (user) throw new Error("Usuario ya esta en uso");
 

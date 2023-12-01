@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 
 const PostSchema = new Schema(
     {
@@ -15,12 +15,12 @@ const PostSchema = new Schema(
         },
         comments: [
             {
-                type: Schema.Types.ObjectId,
+                type: Types.ObjectId,
                 ref: "Comment",
             },
         ],
         author: {
-            type: Schema.Types.ObjectId,
+            type: Types.ObjectId,
             ref: "User",
             required: true,
         },
@@ -31,4 +31,4 @@ const PostSchema = new Schema(
     },
 );
 
-export const Post = model("Post", PostSchema);
+export const PostModel = model("Post", PostSchema);

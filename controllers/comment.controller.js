@@ -1,5 +1,5 @@
-import { Comment } from "../models/Comment.js";
-import { Post } from "../models/Post.js";
+import { CommentModel } from "../models/Comment.js";
+import { PostModel } from "../models/Post.js";
 import { isAuthor } from "./post.controller.js";
 
 export const ctrlCreateComment = async (req, res) => {
@@ -15,7 +15,7 @@ export const ctrlCreateComment = async (req, res) => {
     }
 
     try {
-        const comment = new Comment({
+        const comment = new CommentModel({
             ...req.body,
             post: postId,
         });
@@ -51,7 +51,7 @@ export const ctrlListComments = async (req, res) => {
     }
 
     try {
-        const comments = await Comment.find({ post: postId }, [
+        const comments = await CommentModel.find({ post: postId }, [
             "-__v",
         ]).populate("post", ["-comments", "-author", "-__v"]);
 
@@ -78,7 +78,7 @@ export const ctrlGetCommentById = async (req, res) => {
     }
 
     try {
-        const comment = await Comment.findOne({
+        const comment = await CommentModel.findOne({
             _id: commentId,
             post: postId,
         }).populate("post");
@@ -111,7 +111,7 @@ export const ctrlUpdateComment = async (req, res) => {
     }
 
     try {
-        const comment = await Comment.findOne({ _id: commentId });
+        const comment = await CommentModel.findOne({ _id: commentId });
 
         if (!comment) {
             return res
@@ -146,12 +146,12 @@ export const ctrlDeleteComment = async (req, res) => {
     }
 
     try {
-        await Comment.findOneAndDelete({
+        await CommentModel.findOneAndDelete({
             _id: commentId,
             post: postId,
         });
 
-        await Post.findOneAndUpdate(
+        await PostModel.findOneAndUpdate(
             { _id: postId },
             { $pull: { comments: commentId } },
         );

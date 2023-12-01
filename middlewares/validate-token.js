@@ -1,5 +1,5 @@
 import { verifyJWT } from "../utils/jwt.js";
-import { User } from "../models/User.js";
+import { UserModel } from "../models/User.js";
 
 export const validateToken = async (req, res, next) => {
     try {
@@ -7,7 +7,7 @@ export const validateToken = async (req, res, next) => {
 
         const { userId } = await verifyJWT({ token });
 
-        const user = await User.findOne({ _id: userId });
+        const user = await UserModel.findOne({ _id: userId });
 
         if (!user)
             return res.status(401).json({ error: "Token invalido" });

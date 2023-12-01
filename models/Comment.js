@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 
 const CommentSchema = new Schema(
     {
@@ -11,13 +11,13 @@ const CommentSchema = new Schema(
             default: new Date(Date.now()).getFullYear(),
         },
         posts: {
-            type: Schema.Types.ObjectId,
+            type: Types.ObjectId,
             ref: "Post",
         },
         author: {
-            type: Schema.Types.ObjectId,
+            type: Types.ObjectId,
             ref: "User",
-            // required: true,
+            required: true,
         },
     },
     {
@@ -26,4 +26,4 @@ const CommentSchema = new Schema(
     },
 );
 
-export const Comment = model("Comment", CommentSchema);
+export const CommentModel = model("Comment", CommentSchema);
