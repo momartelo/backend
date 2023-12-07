@@ -7,11 +7,12 @@ export const ctrlCreatePost = async (req, res) => {
     const userId = req.user._id;
 
     try {
-        const { title, description } = req.body;
+        const { title, description, image } = req.body;
 
         const post = new PostModel({
             title,
             description,
+            image,
             author: userId,
         });
 
@@ -107,14 +108,22 @@ export const ctrlDeletePost = async (req, res) => {
             _id: { $in: post.comments },
         });
 
-        await Post.findOneAndDelete({
+        await PostModel.findOneAndDelete({
             _id: postId,
             author: userId,
         });
 
         return res.status(200).json(post);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res
+            .status(500)
+            .json({
+                error: error.message,
+                stack: error.stack,
+                details:
+                    "Error al borrar el post. Detalles del post:" +
+                    JSON.stringify(post),
+            });
     }
 };
 

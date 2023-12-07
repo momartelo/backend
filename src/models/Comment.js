@@ -10,7 +10,7 @@ const CommentSchema = new Schema(
             type: Number,
             default: new Date(Date.now()).getFullYear(),
         },
-        posts: {
+        post: {
             type: Types.ObjectId,
             ref: "Post",
         },
