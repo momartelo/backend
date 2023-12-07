@@ -16,20 +16,20 @@ export const ctrlCreateComment = async (req, res) => {
 
     try {
         const comment = new CommentModel({
-            ...req.body,
+            comment: req.body.comment, // Asegúrate de que estás extrayendo correctamente el comentario del cuerpo de la solicitud
+            author: userId,
             post: postId,
         });
 
         await comment.save();
 
-        await Comment.findOneAndUpdate(
-            { _id: postId },
-            { $push: { comments: comment._id } },
-        );
+        await PostModel.findByIdAndUpdate(postId, {
+            $push: { comments: comment._id },
+        });
 
         res.status(201).json(comment);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({
             error: "No se pudo crear comentario",
         });
@@ -40,14 +40,12 @@ export const ctrlListComments = async (req, res) => {
     const { postId } = req.params;
     const userId = req.user._id;
 
-    const isCommentAuthor = await isAuthor({ postId, userId });
+    const isCommentAuthor = await isCommentAuthor({ postId, userId });
 
     if (!isCommentAuthor) {
-        return res
-            .status(403)
-            .json({
-                error: "El usuario no es el creador del comentario",
-            });
+        return res.status(403).json({
+            error: "El usuario no es el creador del comentario",
+        });
     }
 
     try {
@@ -67,14 +65,12 @@ export const ctrlGetCommentById = async (req, res) => {
     const { commentId, postId } = req.params;
     const userId = req.user._id;
 
-    const isCommentAuthor = await isAuthor({ postId, userId });
+    const isCommentAuthor = await isCommentAuthor({ postId, userId });
 
     if (!isCommentAuthor) {
-        return res
-            .status(403)
-            .json({
-                error: "El usuario no es el autor del comentario",
-            });
+        return res.status(403).json({
+            error: "El usuario no es el autor del comentario",
+        });
     }
 
     try {
@@ -103,15 +99,15 @@ export const ctrlUpdateComment = async (req, res) => {
     const isCommentAuthor = await isAuthor({ postId, userId });
 
     if (!isCommentAuthor) {
-        return res
-            .status(403)
-            .json({
-                error: "El usuario no es el autor del comentario",
-            });
+        return res.status(403).json({
+            error: "El usuario no es el autor del comentario",
+        });
     }
 
     try {
-        const comment = await CommentModel.findOne({ _id: commentId });
+        const comment = await CommentModel.findOne({
+            _id: commentId,
+        });
 
         if (!comment) {
             return res
@@ -138,11 +134,9 @@ export const ctrlDeleteComment = async (req, res) => {
     const isPostAuthor = await isAuthor({ postId, userId });
 
     if (!isPostAuthor) {
-        return res
-            .status(403)
-            .json({
-                error: "El usuario no es el autor del comentario",
-            });
+        return res.status(403).json({
+            error: "El usuario no es el autor del comentario",
+        });
     }
 
     try {
@@ -161,5 +155,20 @@ export const ctrlDeleteComment = async (req, res) => {
         res.status(500).json({
             error: "No se puede borrar comentario",
         });
+    }
+};
+
+// Verifica si el usuario es el autor del comentario
+export const isCommentAuthor = async ({ commentId, userId }) => {
+    try {
+        const comment = await CommentModel.findOne({
+            _id: commentId,
+            author: userId,
+        });
+
+        return !!comment; // Devuelve true si el comentario existe y el usuario es el autor
+    } catch (error) {
+        console.log(error);
+        return false;
     }
 };

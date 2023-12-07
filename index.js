@@ -5,14 +5,14 @@ import morgan from "morgan";
 
 import cookieParser from "cookie-parser";
 
-import { config } from "./settings/config.js";
-import { startConnection } from "./settings/database.js";
+import { config } from "./src/settings/config.js";
+import { startConnection } from "./src/settings/database.js";
 
-import { authRouter } from "./routes/auth.routes.js";
-import { commentRouter } from "./routes/comment.routes.js";
-import { postRouter } from "./routes/post.routes.js";
-import { validateToken } from "./middlewares/validate-token.js";
-import { authHeader } from "./models/validations/auth-validation.js";
+import { authRouter } from "./src/routes/auth.routes.js";
+import { commentRouter } from "./src/routes/comment.routes.js";
+import { postRouter } from "./src/routes/post.routes.js";
+import { validateToken } from "./src/middlewares/validate-token.js";
+import { authHeader } from "./src/models/validations/auth-validation.js";
 
 export const app = express();
 app.use(express.json()); // para analizar datos JSON entrantes de solicitudes HTTP
@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", authRouter);
-app.use("/api/posts", authHeader, validateToken, postRouter);
+app.use("/api/post", authHeader, validateToken, postRouter);
 app.use("/api/comments", authHeader, validateToken, commentRouter);
 
 app.listen(config.port, async () => {
