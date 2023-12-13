@@ -65,7 +65,10 @@ export const ctrlGetCommentById = async (req, res) => {
     const { commentId, postId } = req.params;
     const userId = req.user._id;
 
-    const isCommentAuthor = await isCommentAuthor({ postId, userId });
+    const isCommentAuthor = await isCommentsAuthor({
+        postId,
+        userId,
+    });
 
     if (!isCommentAuthor) {
         return res.status(403).json({
@@ -159,7 +162,7 @@ export const ctrlDeleteComment = async (req, res) => {
 };
 
 // Verifica si el usuario es el autor del comentario
-export const isCommentAuthor = async ({ commentId, userId }) => {
+export const isCommentsAuthor = async ({ commentId, userId }) => {
     try {
         const comment = await CommentModel.findOne({
             _id: commentId,

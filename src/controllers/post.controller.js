@@ -87,7 +87,6 @@ export const ctrlUpdatePost = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 };
-
 export const ctrlDeletePost = async (req, res) => {
     const userId = req.user._id;
     const { postId } = req.params;
@@ -115,15 +114,13 @@ export const ctrlDeletePost = async (req, res) => {
 
         return res.status(200).json(post);
     } catch (error) {
-        return res
-            .status(500)
-            .json({
-                error: error.message,
-                stack: error.stack,
-                details:
-                    "Error al borrar el post. Detalles del post:" +
-                    JSON.stringify(post),
-            });
+        return res.status(500).json({
+            error: error.message,
+            stack: error.stack,
+            details:
+                "Error al borrar el post. Detalles del post:" +
+                JSON.stringify(post),
+        });
     }
 };
 
