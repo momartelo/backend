@@ -8,7 +8,7 @@ const CommentSchema = new Schema(
         },
         date: {
             type: Number,
-            default: new Date(Date.now()).getFullYear(),
+            default: Date.now,
         },
         post: {
             type: Types.ObjectId,
@@ -21,8 +21,14 @@ const CommentSchema = new Schema(
         },
     },
     {
-        timestamps: true,
+        timestamps: false,
         versionKey: false,
+        toJSON: {
+            transform: function (doc, ret) {
+                ret.date = new Date(ret.date).toLocaleString();
+                return ret;
+            },
+        },
     },
 );
 
